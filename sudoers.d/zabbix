@@ -3,4 +3,9 @@ Cmnd_Alias MON = /etc/zabbix/supervisor_check.pl discovery
 Defaults:zabbix !requiretty
 Defaults:zabbix !syslog
 
+Cmnd_Alias STAT = /etc/zabbix/supervisor_check.pl status
+Defaults:zabbix !requiretty
+Defaults:zabbix !syslog
+
 zabbix ALL = NOPASSWD: MON
+zabbix ALL = NOPASSWD: STAT
