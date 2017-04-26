@@ -2,10 +2,11 @@
 
 use strict;
 use Switch;
+use Sys::Hostname;
 
 # --------- base config -------------
-my $ZabbixServer = "1.2.3.4";
-my $HostName = "HostName";
+my $ZabbixServer = "Hostname or IP";
+my $HostName = hostname;
 # ----------------------------------
 
 switch ($ARGV[0])
@@ -41,7 +42,7 @@ case "status" {
 my $result = `/usr/bin/supervisorctl pid`;
 
 if ( $result =~ m/^\d+$/ ) {
-        $result = `/usr/bin/zabbix_sender -z $ZabbixServer -s $HostName -k "supervisor.status" -o "OK"`;
+        $result = `/usr/bin/zabbix_sender -z $ZabbixServer -s "$HostName" -k "supervisor.status" -o "OK"`;
         print $result;
 
         $result = `/usr/bin/supervisorctl status`;
@@ -50,13 +51,13 @@ if ( $result =~ m/^\d+$/ ) {
         foreach my $l (@lines) {
                 my @stat = split / +/, $l;
 
-                $result = `/usr/bin/zabbix_sender -z $ZabbixServer -s $HostName -k "supervisor.check[$stat[0],Status]" -o $stat[1]`;
+                $result = `/usr/bin/zabbix_sender -z $ZabbixServer -s "$HostName" -k "supervisor.check[$stat[0],Status]" -o $stat[1]`;
                 print $result;
         }
 }
 else {
         # error supervisor not runing
-        $result = `/usr/bin/zabbix_sender -z $ZabbixServer -s $HostName -k "supervisor.status" -o "FAIL"`;
+        $result = `/usr/bin/zabbix_sender -z $ZabbixServer -s "$HostName" -k "supervisor.status" -o "FAIL"`;
         print $result;
 }
 
